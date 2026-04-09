@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>열평형 학습관</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; scroll-behavior: smooth; }
+        .particle { position: absolute; border-radius: 50%; pointer-events: none; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <!-- 내비게이션 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex justify-around p-4">
+            <button onclick="showTab('theory')" id="btn-theory" class="tab-btn font-bold text-blue-600 border-b-2 border-blue-600 pb-1">1. 원리 배우기</button>
+            <button onclick="showTab('experiment')" id="btn-experiment" class="tab-btn font-bold text-slate-500 pb-1">2. 직접 실험하기</button>
+            <button onclick="showTab('sim')" id="btn-sim" class="tab-btn font-bold text-slate-500 pb-1">3. 시뮬레이션</button>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-4 py-8">
+        
+        <!-- 1. 원리 배우기 탭 -->
+        <section id="theory" class="tab-content active space-y-8 animate-in fade-in duration-500">
+            <div class="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-red-400">
+                <h1 class="text-3xl font-black text-red-600 mb-6 flex items-center gap-2">
+                    🌡️ 열평형의 원리
+                </h1>
+                
+                <div class="space-y-6 text-lg leading-relaxed text-slate-700">
+                    <div class="bg-red-50 p-6 rounded-2xl">
+                        <h2 class="font-bold text-xl text-red-700 mb-2">🔍 입자의 운동과 온도</h2>
+                        <p>모든 물체는 아주 작은 <strong>입자</strong>들로 이루어져 있어요.</p>
+                        <ul class="list-disc ml-6 mt-2 space-y-1">
+                            <li><span class="font-bold text-red-500">뜨거운 물체:</span> 입자들이 아주 <strong>활발하고 빠르게</strong> 움직여요.</li>
+                            <li><span class="font-bold text-blue-500">차가운 물체:</span> 입자들이 <strong>느릿느릿하게</strong> 움직여요.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-orange-50 p-6 rounded-2xl">
+                        <h2 class="font-bold text-xl text-orange-700 mb-2">🤝 열의 이동 (에너지 나눔)</h2>
+                        <p>두 물체가 접촉하면 활발하던 입자들이 느린 입자들과 부딪히며 에너지를 나눠줍니다.</p>
+                        <p class="mt-2"><strong>열(Heat)</strong>은 항상 <span class="bg-yellow-200 px-1 font-bold">[고온 → 저온]</span>으로 이동해요.</p>
+                    </div>
+
+                    <div class="bg-green-50 p-6 rounded-2xl border-2 border-dashed border-green-300">
+                        <h2 class="font-bold text-xl text-green-700 mb-2 text-center font-black italic">✨ 열평형 상태!</h2>
+                        <p class="text-center">시간이 흘러 두 물체의 온도가 같아져서 더 이상 열이 이동하지 않는 상태를 말해요.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <button onclick="showTab('experiment')" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-4 px-10 rounded-2xl shadow-lg transition-all animate-bounce">
+                        다음: 직접 실험하러 가기! 👇
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 직접 실험하기 탭 -->
+        <section id="experiment" class="tab-content space-y-8">
+            <div class="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-blue-400">
+                <h1 class="text-3xl font-black text-blue-600 mb-6 flex items-center gap-2">
+                    🧪 직접 해보는 열평형 실험
+                </h1>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">📦 준비물</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>✅ 똑같은 크기의 컵 2개</li>
+                            <li>✅ 뜨거운 물 (약 80°C - 주의!)</li>
+                            <li>✅ 찬물 (약 20°C)</li>
+                            <li>✅ 온도계 2개</li>
+                            <li>✅ 초시계 (스마트폰)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-200">
+                        <h3 class="font-bold text-lg mb-3 flex items-center gap-2">⚠️ 주의사항</h3>
+                        <p class="text-sm text-yellow-800 leading-relaxed italic">
+                            뜨거운 물은 위험하니 반드시 선생님이나 보호자와 함께하세요! 화상 방지를 위해 장갑을 끼는 것이 좋아요.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <h3 class="font-bold text-xl text-slate-800">📝 실험 순서</h3>
+                    <div class="space-y-4">
+                        <div class="flex gap-4 items-start">
+                            <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">1</span>
+                            <p class="pt-1">두 컵에 <strong>같은 양</strong>의 뜨거운 물과 찬물을 각각 담습니다.</p>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">2</span>
+                            <p class="pt-1">온도계를 넣고 물의 <strong>처음 온도</strong>를 각각 기록합니다.</p>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">3</span>
+                            <p class="pt-1">한 쪽 물을 다른 쪽에 부어 <strong>섞거나</strong>, 두 용기를 서로 <strong>접촉</strong>시킵니다.</p>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-bold">4</span>
+                            <p class="pt-1"><strong>1분마다</strong> 두 물체의 온도를 측정하여 기록합니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-indigo-50 p-6 rounded-2xl mt-8">
+                        <h3 class="font-bold text-lg text-indigo-700 mb-2 text-center">📊 실험 결과 (미리보기)</h3>
+                        <p class="text-center text-indigo-900">뜨거운 물의 온도는 <strong>내려가고</strong>, 찬물의 온도는 <strong>올라가면서</strong> 결국 두 온도가 똑같아져요!</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <button onclick="showTab('sim')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 px-10 rounded-2xl shadow-lg transition-all">
+                        이제 가상 시뮬레이션 돌려보기! 🚀
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 시뮬레이션 탭 -->
+        <section id="sim" class="tab-content space-y-4">
+            <div class="bg-white p-6 rounded-3xl shadow-xl">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-black text-indigo-600">💻 가상 실험실</h2>
+                    <span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">질량: 동일 고정</span>
+                </div>
+                
+                <!-- 시각화 패널 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div id="boxA" class="relative h-48 bg-slate-900 rounded-2xl overflow-hidden border-4 border-red-500 container-box">
+                        <div class="absolute top-2 left-3 text-white font-bold z-10 text-xs">물체 A (고온)</div>
+                        <div id="tempDispA" class="absolute top-8 left-3 text-red-400 font-black text-3xl z-10">80.0°C</div>
+                        <div id="particlesA" class="absolute inset-0"></div>
+                    </div>
+                    <div id="boxB" class="relative h-48 bg-slate-900 rounded-2xl overflow-hidden border-4 border-blue-500 container-box">
+                        <div class="absolute top-2 right-3 text-white font-bold z-10 text-xs text-right">물체 B (저온)</div>
+                        <div id="tempDispB" class="absolute top-8 right-3 text-blue-400 font-black text-3xl z-10 text-right">20.0°C</div>
+                        <div id="particlesB" class="absolute inset-0"></div>
+                    </div>
+                </div>
+
+                <!-- 컨트롤 -->
+                <div class="flex flex-col md:flex-row items-center justify-around gap-4 bg-slate-50 p-4 rounded-2xl mb-6">
+                    <div class="flex flex-col items-center gap-1">
+                        <span class="text-xs font-bold text-red-500">A 시작 온도</span>
+                        <input type="range" id="inputTempA" min="50" max="100" value="80" class="w-32 h-2 bg-red-100 rounded-lg cursor-pointer">
+                        <span id="labelTempA" class="text-sm font-black">80°C</span>
+                    </div>
+                    
+                    <button id="btnStart" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl shadow-md active:translate-y-0.5 transition-all">
+                        실험 시작!
+                    </button>
+
+                    <div class="flex flex-col items-center gap-1">
+                        <span class="text-xs font-bold text-blue-500">B 시작 온도</span>
+                        <input type="range" id="inputTempB" min="0" max="40" value="20" class="w-32 h-2 bg-blue-100 rounded-lg cursor-pointer">
+                        <span id="labelTempB" class="text-sm font-black">20°C</span>
+                    </div>
+                </div>
+
+                <!-- 그래프 -->
+                <div class="h-64 relative border-t pt-4">
+                    <canvas id="chartCanvas"></canvas>
+                    <div id="equilibriumIndicator" class="hidden absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div class="bg-green-500 text-white px-6 py-2 rounded-xl font-black text-lg shadow-xl animate-bounce border-2 border-white">
+                            열평형 도달!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // 탭 전환 로직
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                btn.classList.add('text-slate-500');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+            activeBtn.classList.remove('text-slate-500');
+            
+            if(tabId === 'sim') {
+                setTimeout(initSim, 100);
+            }
+        }
+
+        // --- 시뮬레이션 엔진 ---
+        const ctx = document.getElementById('chartCanvas').getContext('2d');
+        let chart;
+        let animationId;
+        let particles = [];
+        let time = 0;
+        
+        let state = {
+            tA: 80, tB: 20,
+            currTA: 80, currTB: 20,
+            isRunning: false,
+            k: 0.008 
+        };
+
+        class Particle {
+            constructor(containerId, side) {
+                this.container = document.getElementById(containerId);
+                this.side = side;
+                this.element = document.createElement('div');
+                this.element.className = 'particle';
+                this.size = 8;
+                this.element.style.width = this.size + 'px';
+                this.element.style.height = this.size + 'px';
+                this.x = Math.random() * (this.container.offsetWidth - 20) + 10;
+                this.y = Math.random() * (this.container.offsetHeight - 20) + 10;
+                const angle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(angle);
+                this.vy = Math.sin(angle);
+                this.container.querySelector('#particles' + side).appendChild(this.element);
+            }
+            move(temp) {
+                const speed = Math.sqrt(temp + 10) * 0.4;
+                this.x += this.vx * speed;
+                this.y += this.vy * speed;
+                if (this.x <= 5 || this.x >= this.container.offsetWidth - 13) this.vx *= -1;
+                if (this.y <= 5 || this.y >= this.container.offsetHeight - 13) this.vy *= -1;
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+                const hue = 240 - (temp * 2.4);
+                this.element.style.backgroundColor = `hsl(${hue}, 90%, 50%)`;
+                this.element.style.boxShadow = `0 0 8px hsl(${hue}, 90%, 60%)`;
+            }
+        }
+
+        function initSim() {
+            if (!chart) {
+                initChart();
+                createParticles();
+                particles.forEach(p => p.move(p.side === 'A' ? state.currTA : state.currTB));
+            }
+        }
+
+        function initChart() {
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: '물체 A', data: [], borderColor: '#ef4444', borderWidth: 3, pointRadius: 0, fill: false, tension: 0.2 },
+                        { label: '물체 B', data: [], borderColor: '#3b82f6', borderWidth: 3, pointRadius: 0, fill: false, tension: 0.2 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { min: 0, max: 100, ticks: {font: {size: 10}} },
+                        x: { ticks: { display: false } }
+                    },
+                    plugins: { legend: { labels: { font: { size: 12 } } } },
+                    animation: false
+                }
+            });
+        }
+
+        function createParticles() {
+            document.getElementById('particlesA').innerHTML = '';
+            document.getElementById('particlesB').innerHTML = '';
+            particles = [];
+            for (let i = 0; i < 20; i++) particles.push(new Particle('boxA', 'A'));
+            for (let i = 0; i < 20; i++) particles.push(new Particle('boxB', 'B'));
+        }
+
+        function update() {
+            if (!state.isRunning) return;
+            const dT = state.currTB - state.currTA;
+            const step = state.k * dT;
+            state.currTA += step;
+            state.currTB -= step;
+
+            particles.forEach(p => p.move(p.side === 'A' ? state.currTA : state.currTB));
+            document.getElementById('tempDispA').innerText = state.currTA.toFixed(1) + "°C";
+            document.getElementById('tempDispB').innerText = state.currTB.toFixed(1) + "°C";
+            
+            const colorA = `hsl(${240 - state.currTA * 2.4}, 90%, 50%)`;
+            const colorB = `hsl(${240 - state.currTB * 2.4}, 90%, 50%)`;
+            document.getElementById('boxA').style.borderColor = colorA;
+            document.getElementById('boxB').style.borderColor = colorB;
+
+            if (Math.floor(time * 20) % 2 === 0) {
+                chart.data.labels.push("");
+                chart.data.datasets[0].data.push(state.currTA);
+                chart.data.datasets[1].data.push(state.currTB);
+                chart.update('none');
+            }
+
+            if (Math.abs(state.currTA - state.currTB) < 0.1) {
+                const final = ((state.tA + state.tB) / 2).toFixed(1);
+                document.getElementById('tempDispA').innerText = final + "°C";
+                document.getElementById('tempDispB').innerText = final + "°C";
+                document.getElementById('equilibriumIndicator').classList.remove('hidden');
+                state.isRunning = false;
+                cancelAnimationFrame(animationId);
+                return;
+            }
+            time += 0.05;
+            animationId = requestAnimationFrame(update);
+        }
+
+        function toggleSim() {
+            if (state.isRunning) {
+                state.isRunning = false;
+                cancelAnimationFrame(animationId);
+                document.getElementById('btnStart').innerText = "다시 시작하기";
+            } else {
+                time = 0;
+                state.tA = parseFloat(document.getElementById('inputTempA').value);
+                state.tB = parseFloat(document.getElementById('inputTempB').value);
+                state.currTA = state.tA;
+                state.currTB = state.tB;
+                document.getElementById('equilibriumIndicator').classList.add('hidden');
+                initChart();
+                createParticles();
+                state.isRunning = true;
+                document.getElementById('btnStart').innerText = "멈춤 / 리셋";
+                update();
+            }
+        }
+
+        // 슬라이더 제어
+        document.getElementById('inputTempA').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            document.getElementById('labelTempA').innerText = val + "°C";
+            if (!state.isRunning) {
+                state.currTA = val;
+                document.getElementById('tempDispA').innerText = val.toFixed(1) + "°C";
+            }
+        });
+        document.getElementById('inputTempB').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            document.getElementById('labelTempB').innerText = val + "°C";
+            if (!state.isRunning) {
+                state.currTB = val;
+                document.getElementById('tempDispB').innerText = val.toFixed(1) + "°C";
+            }
+        });
+        document.getElementById('btnStart').addEventListener('click', toggleSim);
+    </script>
+</body>
+</html>
